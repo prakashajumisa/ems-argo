@@ -18,11 +18,11 @@ spec:
         image: mysql:latest
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: prakash
+          value: prakash@880
         - name: MYSQL_DATABASE
           value: ems_ops
         - name: MYSQL_USER
           value: ems_ops
         - name: MYSQL_PASSWORD
-          value: prakash
+          value: prakash@880
 
