@@ -18,11 +18,13 @@ spec:
         envFrom:
         - configMapRef:
             name: backend-config
-        env:
-        - name: SPRING_DATASOURCE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-secret
-              key: password
         ports:
         - containerPort: 8080  # Port our application listens on
+
+      volumes:
+      - name: secrets-store-inline
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "db-secret"
