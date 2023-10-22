@@ -12,15 +12,7 @@ spec:
       labels:
         app: ems-backend
     spec:
-      containers:
-      - name: ems-backend
-        image: prakashvelusamy1999/ems-ops:backend
-        envFrom:
-        - configMapRef:
-            name: backend-config
-        ports:
-        - containerPort: 8080  # Port our application listens on
-
+      serviceAccountName: ssm-serviceaccount
       volumes:
       - name: secrets-store-inline
         csi:
@@ -28,3 +20,23 @@ spec:
           readOnly: true
           volumeAttributes:
             secretProviderClass: "db-secret"
+      containers:
+      - name: ems-backend
+        image: prakashvelusamy1999/ems-ops:backend
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        env:
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password
+        ports:
+        - containerPort: 8080  # Port our application listens on
+        volumeMounts:
+        - name: secrets-store-inline
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+
+
